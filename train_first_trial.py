@@ -4,11 +4,18 @@ Created on Fri Dec 25 21:59:04 2020
 
 @author: Ege
 """
+import numpy as np
+import pandas as pd
+import matplotlib as plt
 
-X =  df['Title_averages']
-y = df['Binary_Label']
+import joblib
 
-X = pd.DataFrame.from_records(X)
+df1 = joblib.load('df_MVP.pkl')
+
+X =  df1['Title_averages']
+X = pd.DataFrame.from_dict(dict(zip(X.index, X.values))).T
+y = df1['Binary_Label']
+
 
 # Splitting the dataset into the Training set and Test set
 from sklearn.model_selection import train_test_split

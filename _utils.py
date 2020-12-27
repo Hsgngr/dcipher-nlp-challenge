@@ -4,6 +4,7 @@ Created on Fri Dec 25 16:47:38 2020
 
 @author: Ege
 """
+import numpy as np
 
 def read_glove_vecs(glove_file):
     with open(glove_file, 'r', encoding= "utf8") as f:

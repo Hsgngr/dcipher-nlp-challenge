@@ -11,6 +11,8 @@ import matplotlib.pyplot as plt
 
 import string #for removing the punctuations
 
+import joblib #for saving models and dataframes
+
 #Import the json data
 df = pd.read_json('data\wos2class.json')
 #Check for Nan Values
@@ -20,8 +22,8 @@ df["Binary_Label"] = (df["Label"].astype('category')).cat.codes
 
 
 #Convert title and abstract as list of words
-df['Title_List']= [(sentence.lower()).split()  for sentence in df['Title']]
-df['Abstract_List']= [(sentence.lower()).split()  for sentence in df['Abstract']]
+#df['Title_List']= [(sentence.lower()).split()  for sentence in df['Title']]
+#df['Abstract_List']= [(sentence.lower()).split()  for sentence in df['Abstract']]
 
 #Find the maximum length of the Title and Abstract
 m = len(df)
@@ -58,7 +60,9 @@ def sentences_to_indices(column,word_to_index,max_len):
     unique_unknown_words = set()
     unique_words = set()
     
-    table_ = str.maketrans('', '', string.punctuation) #for removing any punctuations
+    #Normally its string punctuation
+    punctuations = '!"#$%&\'()*+,./:;<=>?@[\\]^_`{|}~'
+    table_ = str.maketrans('', '', punctuations) #for removing any punctuations
     #Number of samples
     m = len(column)                                  
     #initialize a the array for Title_indices
@@ -96,6 +100,40 @@ def sentences_to_indices(column,word_to_index,max_len):
 
     
 df['Title_indices'] = sentences_to_indices(df['Title'],word_to_index,36)
-    
 
+joblib.dump(df,'df_MVP.pkl')
+
+def sentence_to_avg(word_list, word_to_vec_map):
+    """
+    Converts a sentence (string) into a list of words (strings). Extracts the GloVe representation of each word
+    and averages its value into a single vector encoding the meaning of the sentence.
+    
+    Arguments:
+    sentence -- string, one training example from X
+    word_to_vec_map -- dictionary mapping every word in a vocabulary into its 50-dimensional vector representation
+    
+    Returns:
+    avg -- average vector encoding information about the sentence, numpy-array of shape (50,)
+    """
+    
+    # Initialize the average word vector, should have the same shape as your word vectors.
+    shape = np.shape(50,)
+    
+    avg = np.zeros(shape)
+
+    
+    total = 0
+    unknown_counter = 0
+    for w in word_list:
+        try:
+            total += word_to_vec_map[w]
+        except:
+            unknown_counter += 1
+            
+    avg = total / len(word_list) - unknown_counter
+    
+    
+    return avg
+
+df['Title_averages'] = [sentence_to_avg(word_list, word_to_vec_map) for word_list in df['Title_List'] ]
 
