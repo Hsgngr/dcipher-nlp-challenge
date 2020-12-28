@@ -14,7 +14,7 @@ import string #for removing the punctuations
 import joblib #for saving models and dataframes
 
 #Import the json data
-df = pd.read_json('data\wos2class.json')
+df = pd.read_json('data/wos2class.json')
 #Check for Nan Values
 df.isnull().values.any()
 #Encode the label as 0 and 1 ( 0  for Chemistry, 1 for Material Science)
@@ -22,8 +22,8 @@ df["Binary_Label"] = (df["Label"].astype('category')).cat.codes
 
 
 #Convert title and abstract as list of words
-#df['Title_List']= [(sentence.lower()).split()  for sentence in df['Title']]
-#df['Abstract_List']= [(sentence.lower()).split()  for sentence in df['Abstract']]
+df['Title_List']= [(sentence.lower()).split()  for sentence in df['Title']]
+df['Abstract_List']= [(sentence.lower()).split()  for sentence in df['Abstract']]
 
 #Find the maximum length of the Title and Abstract
 m = len(df)
@@ -101,7 +101,7 @@ def sentences_to_indices(column,word_to_index,max_len):
     
 df['Title_indices'] = sentences_to_indices(df['Title'],word_to_index,36)
 
-joblib.dump(df,'df_MVP.pkl')
+joblib.dump(df,'df_MVP_840.pkl')
 
 def sentence_to_avg(word_list, word_to_vec_map):
     """

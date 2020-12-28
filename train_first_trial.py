@@ -6,11 +6,11 @@ Created on Fri Dec 25 21:59:04 2020
 """
 import numpy as np
 import pandas as pd
-import matplotlib as plt
+import matplotlib.pyplot as plt
 
 import joblib
 
-df1 = joblib.load('df_MVP.pkl')
+df1 = joblib.load('df_MVP_840.pkl')
 
 X =  df1['Title_averages']
 X = pd.DataFrame.from_dict(dict(zip(X.index, X.values))).T
@@ -18,21 +18,35 @@ y = df1['Binary_Label']
 
 
 # Splitting the dataset into the Training set and Test set
+
 from sklearn.model_selection import train_test_split
-X_train, X_test_cv, y_train, y_test_cv = train_test_split(X ,y, test_size = 0.2)
-X_test, X_cv, y_test, y_cv = train_test_split(X_test_cv,y_test_cv, test_size = 0.5)
+X_train, X_test = train_test_split(df1, test_size=0.2, random_state=42, stratify=df1['Binary_Label'])
+
+#Export train and test data:
+X_train.to_json(r'data/wos2class.train.json')
+X_test.to_json(r'data/wos2class.test.json')
 
 from keras.models import Sequential
-from keras.layers import Dense#create model
-from keras.metrics import accuracy
+from keras.layers import Dense, Dropout
+from keras.models import Model
+from keras.layers import Input
+#from keras.metrics import accuracy
 model = Sequential()
 #get number of columns in training data
 n_cols = X_train.shape[1]
 
 #add model layers
-model.add(Dense(50, activation='relu', input_shape=(n_cols,)))
+model.add(Dense(300, activation='relu', input_shape=(n_cols,)))
+model.add(Dense(150, activation='relu'))
+model.add(Dense(150, activation='relu'))
+model.add(Dense(150, activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(150, activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(100, activation='relu'))
 model.add(Dense(1, activation='sigmoid'))
 
+print(model.summary())
 #compile model using mse as a measure of model performance
 model.compile(optimizer='adam', loss='mean_squared_error',metrics=['accuracy'])
 
