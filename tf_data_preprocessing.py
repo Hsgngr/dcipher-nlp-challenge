@@ -8,7 +8,6 @@ Created on Wed Dec 30 00:51:58 2020
 #Import Libraries
 import pandas as pd
 import tensorflow as tf
-import tensorflow_text as text
 
 import matplotlib.pyplot as plt
 import os
@@ -41,15 +40,19 @@ validation_target = validation.pop('Binary_Label')
 batch_size = 32
 seed = 42
 
+train = (train.to_numpy()).ravel()
+test = (test.to_numpy()).ravel()
+validation = (validation.to_numpy()).ravel()
 
-train_data = tf.data.Dataset.from_tensor_slices((train.values, train_target.values)).batch(batch_size)
-test_data = tf.data.Dataset.from_tensor_slices((test.values, test_target.values)).batch(batch_size)
-validation_data = tf.data.Dataset.from_tensor_slices((validation.values, validation_target.values)).batch(batch_size)
+train_data = tf.data.Dataset.from_tensor_slices((train, train_target.values)).batch(batch_size)
+test_data = tf.data.Dataset.from_tensor_slices((test, test_target.values)).batch(batch_size)
+validation_data = tf.data.Dataset.from_tensor_slices((validation, validation_target.values)).batch(batch_size)
 
 #Sanity Check
 for text_batch, label_batch in train_data.take(1):
-    print("Title", text_batch.numpy()[0])
-    print("Label", label_batch.numpy()[0])
+  for i in range(3):
+    print("Title", text_batch.numpy()[i])
+    print("Label", label_batch.numpy()[i])
 
 ###############################################################################
 #Prepare the dataset for training
@@ -62,7 +65,7 @@ def custom_standardization(input_data):
                                   '')
 
 #Text Vectorization
-max_features = 15000
+max_features = 10000
 sequence_length = 36
 
 vectorize_layer = TextVectorization(
@@ -83,7 +86,7 @@ def vectorize_text(text,label):
 #Retrieve a batch (of 32 Titles and labels) from the dataset
 text_batch, label_batch = next(iter(train_data))
 first_title, first_label = text_batch[0], label_batch[0]
-print("Title of the Article:", tf.keras.backend.eval(first_title))
+print("Title of the Article:", first_title)
 print("Label", first_label.numpy())
 print('Vectorized_title', vectorize_text(first_title,first_label))
 
@@ -98,3 +101,34 @@ test_data_ds = test_data.map(vectorize_text)
 
 
 #Performance Configuration
+AUTOTUNE = tf.data.experimental.AUTOTUNE
+
+train_data_ds = train_data_ds.cache().prefetch(buffer_size=AUTOTUNE)
+validation_data_ds = validation_data_ds.cache().prefetch(buffer_size=AUTOTUNE)
+test_data_ds = test_data_ds.cache().prefetch(buffer_size=AUTOTUNE)
+
+#Create the model
+embedding_dim = 16
+
+model = tf.keras.Sequential([
+    layers.Embedding(max_features + 1, embedding_dim),
+    layers.Dropout(0.2),
+    layers.GlobalAveragePooling1D(),
+    layers.Dropout(0.2),
+    layers.Dense(1)])
+
+model.summary()
+
+#Loss function and optimizer
+model.compile(loss=losses.BinaryCrossentropy(from_logits=True),
+              optimizer='adam',
+              metrics=tf.metrics.BinaryAccuracy(threshold=0.0))
+
+#Train the model
+epochs = 10
+
+history = model.fit(
+    train_data_ds,
+    validation_data = validation_data_ds,
+    epochs = epochs)
+
