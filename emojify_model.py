@@ -147,11 +147,12 @@ y_train = y_train.values.tolist()
 X_test = pd.read_json('data/wos2class.test.json')
 X_test_Title = list(X_test['Title'])
 
+X_test_indices = sentences_to_indices(X_test_Title, word_to_index, maxLen)
+
 y_test = X_test['Binary_Label']
 y_test = pd.get_dummies(y_test)
 y_test = y_test.values.tolist()
 
-X_test_indices = sentences_to_indices(X_test_Title, word_to_index, maxLen)
 
 
 model = Emojify_V2((maxLen,), word_to_vec_map, word_to_index)
@@ -159,7 +160,7 @@ model.summary()
 
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-history = model.fit(X1_indices, y1, epochs = 50, batch_size = 32, shuffle=True, validation_data=(X_test_indices,y_test))
+history = model.fit(X_train_indices, y_train, epochs = 50, batch_size = 32, shuffle=True, validation_data=(X_test_indices,y_test))
 ###############################################################################
 
 # summarize history for accuracy
