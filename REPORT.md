@@ -18,18 +18,23 @@ As the project required I split my dataset into training and test sets by strati
 Material Science:      3033        759
 Chemistry:             2962        740
 ```
+I looked into text data and plot the number of each words in titles and abstracts.
+Word Counts in Title          |  Word Counts in Abstract
+:-------------------------:|:-------------------------:
+![Title Word Counts:](media/title_word_counts.png)  |  ![Abstract Word Counts:](media/abstract_word_counts.png)
+
+The maximum length of a sentence is 36 and the maximum length of an abstract is 630. This may create a problem if we want to concetenate them since the numbers are not close to each other. For starting the project I decided to go with only Titles.
 
 To adress the problem's complexity, I started with an MVP where I was only using a small dataset of GLOVE embeddings (6B and 50d). As preprocessing, I split the sentences into word lists convert them to lower case and remove all punctuations from the Titles. When I saw some words like 'self-assembly', I understood that it was a mistake to delete '-' and some others so I customized the punctuations that I'm removing. I have found there were 14433 unique words just in Title and when I used Glove Embeddings, 7194 of them didn't have an embedding in the GLOVE model. So I was curious whether if I used really small dataset of GLOVE or these words or not common enough to be in the vocabularies of these models. I decided to use one of the GLOVE's bigger dataset which includes 840B words with 300 columns) and still got 5781 unknown words I embedded unknown words as 'unk' and you can see how many times did they used in titles. 
 
-```    Total unique words:
+```   
                                  GLOVE_6B.50d       GLOVE_840B.300d
-        Total unique words:      14433              14433      
-       Total unknown words:      7194               5781
+Total unique words:              14433              14433      
+Total unknown words:             7194               5781
 Total count of <unk> token:      12994              7365
 ```
 
-As the most naive approach I took the average vector of each sentences by adding each words together and dividing them by the counter of the word.Although this wasn't a huge success it helped me to create my pipeline around the project. Since nearly half of the embeddings were unknown I decided to create my own embeddings from the scratch with TensorFlow.
-
+As the most naive approach I took the average vector of each sentences by adding each words together and dividing them by the counter of the word. Although this wasn't a huge success it helped me to create my pipeline around the project. Since nearly half of the embeddings were unknown I decided to create my own embeddings from the scratch with TensorFlow. By creating an embedding model from scratch maximum vocabulary number defined as `1000`  and maximum word count as`36`. 
 
 Google's BERT model which has many options and easier to implement with TensorFlow.
 
