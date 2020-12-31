@@ -10,8 +10,15 @@ The main challenges of the project are three-fold:
 The next sections should give an insight into how I have adressed these challenges.
 
 # Approach
-To adress the problem's complexity, I started with an MVP where I was only using a small dataset of GLOVE embeddings and taking the average of each word's vector in the title of articles. Although this wasn't a huge success it helped me to create my pipeline around the project. Later I continued with Google's BERT model which has many options and easier to implement with TensorFlow.
-# Methodology
+
+As the project required I split my dataset into training and test sets by stratifying the Label column of the data. I saved them in data folder.
+To adress the problem's complexity, I started with an MVP where I was only using a small dataset of GLOVE embeddings (400B words with 50 units). As preprocessing, I split the sentences into word lists convert them to lower case and remove all punctuations from the Titles. When I saw some words like 'self-assembly', I understood that it was a mistake to delete '-' and some others so I customized the punctuations that I'm removing. I have found there were 14433 unique words just in Title and when I used Glove Embeddings only 7194 of them had an embedding in the GLOVE model. So I was curious whether if I used really small dataset of GLOVE or these words or not common enough to be in the vocabularies of these models. I decided to use one of the GLOVE's bigger dataset which includes 8 billion words and still got 9000 words out of 14500. I embedded unknown words as 'unk' and used this token 7365 times in the dataset. 
+
+and taking the average of each word's vector in the title of articles. Although this wasn't a huge success it helped me to create my pipeline around the project. I have found there were 14433 unique words and 
+
+Later I continued with training my own embeddings with Tensorflow. I have found there were 14433 unique words and 
+
+Google's BERT model which has many options and easier to implement with TensorFlow.
 
 # Results and Discussion
 
