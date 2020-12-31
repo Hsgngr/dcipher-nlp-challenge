@@ -72,6 +72,10 @@ Non-trainable params: 20,000,050
 
 # Results and Discussion
 
+Word Counts in Title          |  Word Counts in Abstract
+:-------------------------:|:-------------------------:
+![Title Word Counts:](media/accuracy_plot.png)  |  ![Abstract Word Counts:](media/loss_plot.png)
+
 # Conclusion
 
 The model achieved 67% accuracy in the test data.
