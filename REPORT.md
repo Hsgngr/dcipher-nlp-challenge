@@ -81,8 +81,8 @@ Accuracy Plot              |  Loss Plot
 It was prone to overfitting therefore I didnt run with more epochs.
 
 # Conclusion
+Althought the project wasn't successful, I learned many new things about NLP and state-of-art technologies of Embedding. The models that I tried in this project are GLOVE, BERT and FastText in this order.The model achieved 67% accuracy in the test data with only Titles.
 
-The model achieved 67% accuracy in the test data with only Titles.
-As a future work, I will try to create my model with the FastText embeddings and boosting my vocabulary with external sources like wikipedia. I believe FastText will increase the model's accuracy by using its ability to create word representations for even made-up words.
+As a future work, I will try to create my model with the FastText embeddings and boosting my vocabulary with Abstracts and external sources like wikipedia and academic articles. I believe FastText will increase the model's accuracy by using its ability to create word representations for even made-up words.
 
-Althought the project wasn't successful, I learned many new things about NLP and state-of-art technologies of Embedding. The models that I tried in this project are GLOVE, BERT and FASTTEXT in this order.
+
