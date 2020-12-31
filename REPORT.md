@@ -12,12 +12,24 @@ The next sections should give an insight into how I have adressed these challeng
 # Approach
 
 As the project required I split my dataset into training and test sets by stratifying the Label column of the data. I saved them in data folder.
-To adress the problem's complexity, I started with an MVP where I was only using a small dataset of GLOVE embeddings (400,000 words with 50 values). As preprocessing, I split the sentences into word lists convert them to lower case and remove all punctuations from the Titles. When I saw some words like 'self-assembly', I understood that it was a mistake to delete '-' and some others so I customized the punctuations that I'm removing. I have found there were 14433 unique words just in Title and when I used Glove Embeddings only 7194 of them had an embedding in the GLOVE model. So I was curious whether if I used really small dataset of GLOVE or these words or not common enough to be in the vocabularies of these models. I decided to use one of the GLOVE's bigger dataset which includes 8B words with 300 columns) and still got 9000 words out of 14500. I embedded unknown words as 'unk' and used this token 7365 times in the dataset. 
 
-As the most naive approach I took the average vector of each sentences by adding each words together and dividing them by the counter of the word.Although this wasn't a huge success it helped me to create my pipeline around the project.
+```              
+                       TRAIN       TEST
+Material Science:      3033        759
+Chemistry:             2962        740
+```
 
+To adress the problem's complexity, I started with an MVP where I was only using a small dataset of GLOVE embeddings (6B and 50d). As preprocessing, I split the sentences into word lists convert them to lower case and remove all punctuations from the Titles. When I saw some words like 'self-assembly', I understood that it was a mistake to delete '-' and some others so I customized the punctuations that I'm removing. I have found there were 14433 unique words just in Title and when I used Glove Embeddings, 7194 of them didn't have an embedding in the GLOVE model. So I was curious whether if I used really small dataset of GLOVE or these words or not common enough to be in the vocabularies of these models. I decided to use one of the GLOVE's bigger dataset which includes 840B words with 300 columns) and still got 5781 unknown words I embedded unknown words as 'unk' and you can see how many times did they used in titles. 
 
-Later I continued with training my own embeddings with Tensorflow. I have found there were 14433 unique words and 
+```    Total unique words:
+                                 GLOVE_6B.50d       GLOVE_840B.300d
+        Total unique words:      14433              14433      
+       Total unknown words:      7194               5781
+Total count of <unk> token:      12994              7365
+```
+
+As the most naive approach I took the average vector of each sentences by adding each words together and dividing them by the counter of the word.Although this wasn't a huge success it helped me to create my pipeline around the project. Since nearly half of the embeddings were unknown I decided to create my own embeddings from the scratch with TensorFlow.
+
 
 Google's BERT model which has many options and easier to implement with TensorFlow.
 
