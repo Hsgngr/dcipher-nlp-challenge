@@ -19,8 +19,9 @@ df = pd.read_json('data/wos2class.json')
 df.isnull().values.any()
 #Encode the label as 0 and 1 ( 0  for Chemistry, 1 for Material Science)
 df["Binary_Label"] = (df["Label"].astype('category')).cat.codes
+df = df.drop(columns=['Label'])
 
-
+#joblib.dump(df, 'df_3_column.pkl')
 #Convert title and abstract as list of words
 df['Title_List']= [(sentence.lower()).split()  for sentence in df['Title']]
 df['Abstract_List']= [(sentence.lower()).split()  for sentence in df['Abstract']]
