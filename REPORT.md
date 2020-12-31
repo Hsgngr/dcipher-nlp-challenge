@@ -72,9 +72,9 @@ Non-trainable params: 20,000,050
 
 # Results and Discussion
 
-Word Counts in Title          |  Word Counts in Abstract
+Accuracy Plot              |  Loss Plot
 :-------------------------:|:-------------------------:
-![Title Word Counts:](media/accuracy_plot.png)  |  ![Abstract Word Counts:](media/loss_plot.png)
+![Accuracy :](media/accuracy_plot.png)  |  ![Loss:](media/loss_plot.png)
 
 # Conclusion
 
