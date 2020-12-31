@@ -34,10 +34,47 @@ Total unknown words:             7194               5781
 Total count of <unk> token:      12994              7365
 ```
 
-As the most naive approach I took the average vector of each sentences by adding each words together and dividing them by the counter of the word. Although this wasn't a huge success it helped me to create my pipeline around the project. Since nearly half of the embeddings were unknown I decided to create my own embeddings from the scratch with TensorFlow. By creating an embedding model from scratch maximum vocabulary number defined as `1000`  and maximum word count as`36`. 
+As the most naive approach I took the average vector of each sentences by adding each words together and dividing them by the counter of the word. Although this wasn't a huge success it helped me to create my pipeline around the project. Since nearly half of the embeddings were unknown I decided to create my own embeddings from the scratch with TensorFlow. By creating an embedding model from scratch maximum vocabulary number defined as `1000`  and maximum word count as`36`. This approach also got only %65 accuracy.
 
-Google's BERT model which has many options and easier to implement with TensorFlow.
+From there I have decided to try Google's BERT model which has many options and easier to implement with TensorFlow. I started with Small-bert which is great for experimenting with the data and iteration of the process. I set up my model and train it. However it wasn't more successful from the other trials. Then I tried to use only abstract and then combination of abstract and title.
+
+For my last resort, I tried the FastText model and I have found that It could have been a great model only If I could find a way to use since it is a great model for unknown words. I trained the FastText model for 3 hours and accidentally removed it with one click.
+
+Therefore I am submitting my first approach with the GLOVE embeddings and custom text vectorization.
+
+The model's summary is
+```   
+Model: "model_3"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_4 (InputLayer)         [(None, 36)]              0         
+_________________________________________________________________
+embedding_4 (Embedding)      (None, 36, 50)            20000050  
+_________________________________________________________________
+lstm_6 (LSTM)                (None, 36, 128)           91648     
+_________________________________________________________________
+dropout_6 (Dropout)          (None, 36, 128)           0         
+_________________________________________________________________
+lstm_7 (LSTM)                (None, 128)               131584    
+_________________________________________________________________
+dropout_7 (Dropout)          (None, 128)               0         
+_________________________________________________________________
+dense_3 (Dense)              (None, 2)                 258       
+_________________________________________________________________
+activation_3 (Activation)    (None, 2)                 0         
+=================================================================
+Total params: 20,223,540
+Trainable params: 223,490
+Non-trainable params: 20,000,050
+```
+
 
 # Results and Discussion
 
 # Conclusion
+
+The model achieved 67% accuracy in the test data.
+As a future work, I will try to create my model with the FastText embeddings and boosting my vocabulary with external sources like wikipedia. I believe FastText will increase the model's accuracy by using its ability to create word representations for even made-up words.
+
+Althought the project wasn't successful, I learned many new things about NLP and state-of-art technologies of Embedding. The models that I tried in this project are GLOVE, BERT and FASTTEXT in this order.
