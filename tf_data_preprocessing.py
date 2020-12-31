@@ -54,7 +54,7 @@ for text_batch, label_batch in train_data.take(1):
     print("Title", text_batch.numpy()[i])
     print("Label", label_batch.numpy()[i])
 
-###############################################################################
+###############################################################################git
 #Prepare the dataset for training
 
 def custom_standardization(input_data):

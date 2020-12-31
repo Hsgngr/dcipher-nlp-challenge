@@ -8,17 +8,20 @@ Created on Tue Dec 29 15:19:59 2020
 
 import numpy as np
 import pandas as pd
+
 np.random.seed(0)
 from keras.models import Model
 from keras.layers import Dense, Input, Dropout, LSTM, Activation
 from keras.layers.embeddings import Embedding
 from keras.preprocessing import sequence
 from keras.initializers import glorot_uniform
-import string #for removing the punctuations
+import string  # for removing the punctuations
+
 np.random.seed(1)
 
+
 def read_glove_vecs(glove_file):
-    with open(glove_file, 'r', encoding= "utf8") as f:
+    with open(glove_file, 'r', encoding="utf8") as f:
         words = set()
         word_to_vec_map = {}
         for line in f:
@@ -26,7 +29,7 @@ def read_glove_vecs(glove_file):
             curr_word = line[0]
             words.add(curr_word)
             word_to_vec_map[curr_word] = np.array(line[1:], dtype=np.float64)
-        
+
         i = 1
         words_to_index = {}
         index_to_words = {}
@@ -40,8 +43,8 @@ def read_glove_vecs(glove_file):
 # You can download the data from here: http://nlp.stanford.edu/data/wordvecs/glove.6B.zip
 word_to_index, index_to_word, word_to_vec_map = read_glove_vecs('data/glove.6B.50d.txt')
 
-def sentences_to_indices(column,word_to_index,max_len):
-    
+
+def sentences_to_indices(column, word_to_index, max_len):
     """
     Converts an array of sentences (strings) into an array of indices corresponding to words in the sentences.
     
@@ -56,39 +59,39 @@ def sentences_to_indices(column,word_to_index,max_len):
     unknown_word_counter = 0
     unique_unknown_words = set()
     unique_words = set()
-    
-    #Normally its string punctuation
+
+    # Normally its string punctuation
     punctuations = '!"#$%&\'()*+,./:;<=>?@[\\]^_`{|}~'
-    table_ = str.maketrans('', '', punctuations) #for removing any punctuations
-    #Number of samples
-    m = len(column)                                  
-    #initialize a the array for Title_indices
-    X_indices = np.zeros((m,max_len))
-    
+    table_ = str.maketrans('', '', punctuations)  # for removing any punctuations
+    # Number of samples
+    m = len(column)
+    # initialize a the array for Title_indices
+    X_indices = np.zeros((m, max_len))
+
     for i in range(m):
-        
-        sentence_without_punc = column[i].translate(table_)                       
+
+        sentence_without_punc = column[i].translate(table_)
         sentence_words = (sentence_without_punc.lower()).split()
-        
-        #print(sentence_words)
+
+        # print(sentence_words)
         j = 0
-        
+
         for w in sentence_words:
             # Set the (i,j)th entry of X_indices to the index of the correct word.
-            #print(w)
-            
+            # print(w)
+
             try:
                 X_indices[i, j] = word_to_index[w]
             except:
-                print('unknown word: ',w)
+                print('unknown word: ', w)
                 X_indices[i, j] = word_to_index['unk']
                 unknown_word_counter += 1
                 unique_unknown_words.add(w)
-                
+
             finally:
                 unique_words.add(w)
-                j = j+1           
-    
+                j = j + 1
+
     print('total unique words', len(unique_words))
     print('total unique unknown words', len(unique_unknown_words))
     print('Counter of unknown words: ', unknown_word_counter)
@@ -107,33 +110,33 @@ def pretrained_embedding_layer(word_to_vec_map, word_to_index):
     Returns:
     embedding_layer -- pretrained layer Keras instance
     """
-    
-    vocab_len = len(word_to_index) + 1                  
-    emb_dim = word_to_vec_map["cucumber"].shape[0]      # define dimensionality of your GloVe word vectors (= 50)
-    
 
-    emb_matrix = np.zeros((vocab_len,emb_dim))
-    for word, idx in word_to_index.items(): #key and value
-        
+    vocab_len = len(word_to_index) + 1
+    emb_dim = word_to_vec_map["cucumber"].shape[0]  # define dimensionality of your GloVe word vectors (= 50)
+
+    emb_matrix = np.zeros((vocab_len, emb_dim))
+    for word, idx in word_to_index.items():  # key and value
+
         emb_matrix[idx, :] = word_to_vec_map[word]
 
-
     # Make it non-trainable.
-    embedding_layer = Embedding(input_dim = vocab_len, output_dim = emb_dim, trainable = False)    
+    embedding_layer = Embedding(input_dim=vocab_len, output_dim=emb_dim, trainable=False)
     embedding_layer.build((None,))
     embedding_layer.set_weights([emb_matrix])
-    
+
     return embedding_layer
 
-#Check if its working
+
+# Check if its working
 embedding_layer = pretrained_embedding_layer(word_to_vec_map, word_to_index)
 print("weights[0][1][3] =", embedding_layer.get_weights()[0][1][3])
 """
 weights[0][1][3] = -0.3403
 """
 
-#maxLen for Title is 36
+# maxLen for Title is 36
 maxLen = 36
+
 
 def custom_model(input_shape, word_to_vec_map, word_to_index):
     """
@@ -147,33 +150,32 @@ def custom_model(input_shape, word_to_vec_map, word_to_index):
     Returns:
     model -- a model instance in Keras
     """
-    
-    sentence_indices = Input(shape = input_shape, dtype='int32')   
+
+    sentence_indices = Input(shape=input_shape, dtype='int32')
     embedding_layer = pretrained_embedding_layer(word_to_vec_map, word_to_index)
-    embeddings = embedding_layer(sentence_indices)   
-    
-    X = LSTM(units=128, return_sequences = True)(embeddings)
+    embeddings = embedding_layer(sentence_indices)
 
-    X = Dropout(rate = 0.8)(X)
+    X = LSTM(units=128, return_sequences=True)(embeddings)
 
-    X = LSTM(units=128, return_sequences = False)(X)
+    X = Dropout(rate=0.8)(X)
 
-    X = Dropout(rate = 0.8)(X)
+    X = LSTM(units=128, return_sequences=False)(X)
+
+    X = Dropout(rate=0.8)(X)
 
     X = Dense(units=2)(X)
 
     X = Activation('softmax')(X)
-    
+
     # Create Model instance which converts sentence_indices into X.
-    model = Model(inputs= sentence_indices, outputs= X)
-    
+    model = Model(inputs=sentence_indices, outputs=X)
+
     ### END CODE HERE ###
-    
+
     return model
 
 
-
-X_train =  pd.read_json('data/wos2class.train.json')
+X_train = pd.read_json('data/wos2class.train.json')
 X_train_Title = list(X_train['Title'])
 X_train_indices = sentences_to_indices(X_train_Title, word_to_index, maxLen)
 
@@ -195,6 +197,7 @@ model.summary()
 
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-history = model.fit(X_train_indices, y_train, epochs = 8, batch_size = 32, shuffle=True, validation_data=(X_test_indices,y_test))
+history = model.fit(X_train_indices, y_train, epochs=8, batch_size=32, shuffle=True,
+                    validation_data=(X_test_indices, y_test))
 
 model.save('model')
