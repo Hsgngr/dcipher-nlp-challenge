@@ -73,7 +73,7 @@ It didn't increase my accuracy. I decided to feed my deep learning model with mu
  
 The model's summary:
 ```   
-Model: "model_54"
+Model: "Bidirectional LSTM Model with Multiple Inputs"
 __________________________________________________________________________________________________
 Layer (type)                    Output Shape         Param #     Connected to                     
 ==================================================================================================
@@ -100,7 +100,8 @@ Total params: 3,586,154
 Trainable params: 501,954
 Non-trainable params: 3,084,200
 ```
-
+The visualization of the model:
+![Model Visualization:](media/bidirectional_lstm_model.png) 
 
 # Results and Discussion
 
