@@ -1,5 +1,5 @@
 # Update!
-Hi, Thanks for reading the report. Although the deadline has passed I wanted to try improving my model and implement new things. Therefore I wanted to create a release just before the deadline for the challenge. So if you would like to see that version of the repo, [here it is.](https://github.com/Hsgngr/dcipher-nlp-challenge/releases/tag/Deadline_version) 
+Hi, Thanks for reading the report. Although the deadline has passed I wanted to continue to try improving my model and implement new things. Therefore I wanted to create a release just before the deadline for the challenge. So if you would like to see that version of the repo, [here it is.](https://github.com/Hsgngr/dcipher-nlp-challenge/releases/tag/Deadline_version) 
 
 Otherwise this is the updated and latest version of the report.
 
