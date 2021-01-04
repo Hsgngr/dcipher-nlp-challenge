@@ -17,6 +17,7 @@ The next sections should give an insight into how I have adressed these challeng
 
 # Approach
 
+### Preprocessing
 As the project required I split my dataset into training and test sets by stratifying the Label column of the data. I saved them in the data folder.
 
 ```              
@@ -54,37 +55,53 @@ As the most naive approach I took the average vector of each Title by adding eac
 From there I have decided to try Google's BERT model which has many options and easier to implement with TensorFlow. I started with Small-bert (great for experimenting with the data and iteration of the process) and I set up my model around it. However it wasn't more successful from the other trials. Then I tried to use only abstract and then combination of abstract and title by just concatinating them.
 
 ### Main Approach
-For my last resort, I decided to implement FastText since it can create embeddings for every word even ones which are not included in vocabulary by using . I used FastText huge pre-trained model and got 65 % accuracy. I thought this approach can be promising.
+For my last resort, I decided to implement FastText since it can create embeddings for every word even ones which are not included in vocabulary by using . I used FastText huge pre-trained model and got 65 % accuracy. I thought this approach can be promising. I decided to use the all words in the training set to create a vocabulary for my task. However since there were only 7494 articles I decided to add external sources to my vocabulary. For that I used wikipedia pages.
 
-Therefore I am submitting my first approach with the GLOVE embeddings and custom text vectorization.
+By using wikipedia's own API I added 3 page to my text corpus for the fastText model. 'Chemistry', 'Chemical element', and 'Material Science'.
+This approach increased my vocabulary to 15421 words.
 
-The model's summary is
-```   
-Model: "model_3"
-_________________________________________________________________
-Layer (type)                 Output Shape              Param #   
-=================================================================
-input_4 (InputLayer)         [(None, 36)]              0         
-_________________________________________________________________
-embedding_4 (Embedding)      (None, 36, 50)            20000050  
-_________________________________________________________________
-lstm_6 (LSTM)                (None, 36, 128)           91648     
-_________________________________________________________________
-dropout_6 (Dropout)          (None, 36, 128)           0         
-_________________________________________________________________
-lstm_7 (LSTM)                (None, 128)               131584    
-_________________________________________________________________
-dropout_7 (Dropout)          (None, 128)               0         
-_________________________________________________________________
-dense_3 (Dense)              (None, 2)                 258       
-_________________________________________________________________
-activation_3 (Activation)    (None, 2)                 0         
-=================================================================
-Total params: 20,223,540
-Trainable params: 223,490
-Non-trainable params: 20,000,050
+After some hyperparameter tuning I decided to go with these parameters for my fastText model:
 ```
-
+embedding_size = 100
+window_size = 40
+min_word = 5
+down_sampling = 1e-2
+```
+After creating my embedding layer, I tried to find the best way to combine title and abstract features.
+I concatenate them into one feature by adding a special <sep> token between them however it didn't improve the model. their size were different and after cleaning both of them maximum title length was 36 and maximum abstract length was 97.
+It didn't increase my accuracy. I decided to feed my deep learning model with multiple inputs rather than just one concatenated one. I created an input layer for titles which has maximum length of 32 and another input layer for abstracts which has maximum length of 96. Together they are summing up to 128. By using the same embedding layer but giving the columns seperately I achieved 71.6 % accuracy which I was aiming as a milestone.
+ 
+The model's summary:
+```   
+Model: "Bidirectional LSTM Model with Multiple Inputs"
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to                     
+==================================================================================================
+input_71 (InputLayer)           [(None, 32)]         0                                            
+__________________________________________________________________________________________________
+input_72 (InputLayer)           [(None, 96)]         0                                            
+__________________________________________________________________________________________________
+embedding_69 (Embedding)        (None, 32, 100)      1542100     input_71[0][0]                   
+__________________________________________________________________________________________________
+embedding_70 (Embedding)        (None, 96, 100)      1542100     input_72[0][0]                   
+__________________________________________________________________________________________________
+bidirectional_23 (Bidirectional (None, 256)          234496      embedding_69[0][0]               
+__________________________________________________________________________________________________
+bidirectional_24 (Bidirectional (None, 256)          234496      embedding_70[0][0]               
+__________________________________________________________________________________________________
+concatenate_18 (Concatenate)    (None, 512)          0           bidirectional_23[0][0]           
+                                                                 bidirectional_24[0][0]           
+__________________________________________________________________________________________________
+dense_66 (Dense)                (None, 64)           32832       concatenate_18[0][0]             
+__________________________________________________________________________________________________
+dense_67 (Dense)                (None, 2)            130         dense_66[0][0]                   
+==================================================================================================
+Total params: 3,586,154
+Trainable params: 501,954
+Non-trainable params: 3,084,200
+```
+The visualization of the model:
+![Model Visualization:](media/bidirectional_lstm_model.png) 
 
 # Results and Discussion
 
