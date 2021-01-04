@@ -18,7 +18,7 @@ The next sections should give an insight into how I have adressed these challeng
 # Approach
 
 ### Preprocessing
-As the project required I split my dataset into training and test sets by stratifying the Label column of the data. I saved them in the data folder.
+As the project required I split my dataset into training and test sets by stratifying the Label column of the data. I saved them in the data folder. I was gonna use a validation set for the project which I split from training set however the lack of data necessitate the usage of all data during training.
 
 ```              
                        TRAIN       TEST
@@ -101,7 +101,13 @@ Trainable params: 501,954
 Non-trainable params: 3,084,200
 ```
 The visualization of the model:
-![Model Visualization:](media/bidirectional_lstm_model.png) 
+![Model Visualization:](media/bidirectional_lstm_model.png)
+
+The LSTM layers that I added have dropouts and regularizations as:
+```   
+Bidirectional(LSTM(128, dropout=0.3, recurrent_dropout=0.3, kernel_regularizer=regularizers.l2(0.01)))(embedding_layer)
+```   
+Although this decrease the speed of training it helped to generalize the model by 0.8 %.
 
 # Results and Discussion
 
@@ -110,6 +116,14 @@ With a a relatively small dataset of GLOVE (smallest 6B) and with 2 LSTM layers 
 Accuracy Plot              |  Loss Plot
 :-------------------------:|:-------------------------:
 ![Accuracy :](media/accuracy_plot.png)  |  ![Loss:](media/loss_plot.png)
+
+Precision Plot             |  Recall Plot
+:-------------------------:|:-------------------------:
+![Precision :](media/precision_plot.png)  |  ![Loss:](media/recall_plot.png)
+
+AUC Plot                   |  F-1 Score Plot
+:-------------------------:|:-------------------------:
+![AUC :](media/auc_plot.png)  |  ![F-1 Score:](media/recall_plot.png)
 
 It was prone to overfitting therefore I didnt run with more epochs.
 
