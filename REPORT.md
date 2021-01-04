@@ -1,4 +1,4 @@
-# Update
+# Update!
 Hi, Thanks for reading the report. Although the deadline has passed I wanted to try improving my model and implement new things. Therefore I wanted to create a release just before the deadline for the challenge. So if you would like to see that version of the repo, [here it is.](https://github.com/Hsgngr/dcipher-nlp-challenge/releases/tag/Deadline_version) 
 
 Otherwise this is the updated and latest version of the report.
@@ -17,7 +17,7 @@ The next sections should give an insight into how I have adressed these challeng
 
 # Approach
 
-As the project required I split my dataset into training and test sets by stratifying the Label column of the data. I saved them in data folder.
+As the project required I split my dataset into training and test sets by stratifying the Label column of the data. I saved them in the data folder.
 
 ```              
                        TRAIN       TEST
@@ -29,9 +29,18 @@ Word Counts in Title          |  Word Counts in Abstract
 :-------------------------:|:-------------------------:
 ![Title Word Counts:](media/title_word_counts.png)  |  ![Abstract Word Counts:](media/abstract_word_counts.png)
 
-The maximum length of a sentence is 36 and the maximum length of an abstract is 630. This may create a problem if we want to concetenate them since the numbers are not close to each other. For starting the project I decided to go with only Titles.
+For preprocessing I created my text corpus by using several different techniques including:
 
-To adress the projects's complexity, I started with an MVP where I was only using a small dataset of GLOVE embeddings (6B and 50d). As preprocessing, I split the sentences into word lists convert them to lower case and remove all punctuations from the Titles. When I saw some words like 'self-assembly', I understood that it was a mistake to delete '-' and some others so I customized the punctuations that I'm removing. I have found there were 14433 unique words just in Title and when I used Glove Embeddings, 7194 of them didn't have an embedding in the GLOVE model. So I was curious whether if I used really small dataset of GLOVE or these words or not common enough to be in the vocabularies of these models. I decided to use one of the GLOVE's bigger dataset which includes 840B words with 300 columns) and still got 5781 unknown words I embedded unknown words as 'unk' and you can see how many times did they used in titles. 
+- Converting to lower case
+- Removing en_stop words and custom words such as 'Elsevier' or 'biorxic' which doesn't help to the model at all.
+- Removing all single characters
+- Substituting multiple spaces with single space
+- Lemmatization
+
+The maximum length of a sentence is 36 and the maximum length of an abstract is 630. if we want to concetenate them having unbalance can be a problem. For starting the project I decided to go with only Titles.
+
+### First Trials
+To adress the projects's complexity, I started with an MVP where I was only using a small dataset of GLOVE embeddings (6B and 50d). As preprocessing, I split the sentences into word lists convert them to lower case and remove all punctuations. When I saw some words like 'self-assembly', I understood that it was a mistake to delete '-' and some others so I customized the punctuations that I'm removing. I have found there were 14433 unique words just in Title and when I used Glove Embeddings, 7194 of them didn't have an embedding in the GLOVE model. So I was curious whether if I used really small dataset of GLOVE or these words or not common enough to be in the vocabularies of these models. I decided to use one of the GLOVE's bigger dataset which includes 840B words with 300 columns) and still got 5781 unknown words I embedded unknown words as 'unk' and you can see how many times did they used in titles. 
 
 ```   
                                  GLOVE_6B.50d       GLOVE_840B.300d
@@ -40,11 +49,12 @@ Total unknown words:             7194               5781
 Total count of <unk> token:      12994              7365
 ```
 
-As the most naive approach I took the average vector of each sentences by adding each words together and dividing them by the counter of the word. Although this wasn't a huge success it helped me to create my pipeline around the project. Since nearly half of the embeddings were unknown I decided to create my own embeddings from the scratch with TensorFlow. By creating an embedding model from scratch maximum vocabulary number defined as `1000`  and maximum word count as`36`. This approach also got only %65 accuracy.
+As the most naive approach I took the average vector of each Title by adding each words together and dividing them by the counter of the word. Although this wasn't a huge success (62 % accuracy) it helped me to create my pipeline around the project. Since nearly half of the embeddings were unknown I decided to create my own embeddings from the scratch with TensorFlow. By creating an embedding model from scratch maximum vocabulary number defined as `1000`  and maximum word count as`36`. This approach also got only 64% accuracy.
 
-From there I have decided to try Google's BERT model which has many options and easier to implement with TensorFlow. I started with Small-bert which is great for experimenting with the data and iteration of the process. I set up my model and train it. However it wasn't more successful from the other trials. Then I tried to use only abstract and then combination of abstract and title.
+From there I have decided to try Google's BERT model which has many options and easier to implement with TensorFlow. I started with Small-bert (great for experimenting with the data and iteration of the process) and I set up my model around it. However it wasn't more successful from the other trials. Then I tried to use only abstract and then combination of abstract and title by just concatinating them.
 
-For my last resort, I tried the FastText model and I have found that It could have been a great model only If I could find a way to use since it is a great model for unknown words. I trained the FastText model for 3 hours and accidentally removed it with one click.
+### Main Approach
+For my last resort, I decided to implement FastText since it can create embeddings for every word even ones which are not included in vocabulary by using . I used FastText huge pre-trained model and got 65 % accuracy. I thought this approach can be promising.
 
 Therefore I am submitting my first approach with the GLOVE embeddings and custom text vectorization.
 
