@@ -1,5 +1,5 @@
 # Update
-Hi, thanks for reading the report of the project. Although the deadline has passed I wanted to try improving my model and implement new things. Therefore I wanted to create a release just before the deadline. So if you would like to see that version of the repo, here is the [link](https://github.com/Hsgngr/dcipher-nlp-challenge/releases/tag/Deadline_version) Otherwise please continue with this updated version of the report.
+Hi, Thanks for reading the report. Although the deadline has passed I wanted to try improving my model and implement new things. Therefore I wanted to create a release just before the deadline for the challenge. So if you would like to see that version of the repo, [here it is](https://github.com/Hsgngr/dcipher-nlp-challenge/releases/tag/Deadline_version) Otherwise this is the updated and latest version of the report.
 
 # Introduction
 This report outlines my approach to the dcipher-nlp-challenge's Binary Classifier for academic articles. The goal of the project was to correctly classify academic article's label as
