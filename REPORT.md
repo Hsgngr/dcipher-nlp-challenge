@@ -1,11 +1,15 @@
+# Update
+Hi, thanks for reading the report of the project. Although the deadline has passed I wanted to try improving my model and implement new things. Therefore I wanted to create a release just before the deadline. So if you would like to see that version of the repo, here is the [link](https://github.com/Hsgngr/dcipher-nlp-challenge/releases/tag/Deadline_version) Otherwise please continue with this updated version of the report.
+
 # Introduction
-This report outlines my approach to the dcipher-nlp-challenge's Binary Classifier for academic articles. The goal of the project is to correctly classify academic article's label as
-"Chemistry" or "Material Science". We are given 7494 article with their titles and abstracts. As we are using text as our input data, the project falls under the category of Text Classification - Natural Language Process (NLP) 
+This report outlines my approach to the dcipher-nlp-challenge's Binary Classifier for academic articles. The goal of the project was to correctly classify academic article's label as
+"Chemistry" or "Material Science". We are given 7494 article with their titles and abstracts. As we are using text as our input data, the project falls under the category of Text Classification.
 
 The main challenges of the project are three-fold:
- * There are two different inputs,'Title' and 'Abstract'. Title is short enough to improve the model on it however abstract has many valuable information about the article's label. It was challenging to select between two and hard to combine.
+
+ * There are two different inputs,'Title' and 'Abstract'. Title is short enough to iterate the model on it however abstract has many valuable information about the article's label. It was challenging to select between two and hard to combine.
  * Since these are academic articles, many of them had unique words which are not part of the pre-trained embedding models such as GLOVE.
- * There are overwhelmingly many different models as open-source and lack of computation power was a huge struggle since it wasn't viable to try many of them and NLP models generally have many trainable parameters.
+ * Chemistry and Material Science are not that much different from each other. Material Science is a multi-diciplinary field which is correlated with Chemistry a lot. Therefore it was another challenge to classify them correctly.
 
 The next sections should give an insight into how I have adressed these challenges.
 
