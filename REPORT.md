@@ -146,7 +146,7 @@ Accuracy Score:  71.514 %
 There was almost 1.2 % improvement on the test data.
 
 # Conclusion
-Althought the project wasn't successful, I learned many new things about state-of-art technologies of NLP. The models that I tried in this project are respectively GLOVE, BERT and FastText. The model achieved 71.5 % accuracy in the test data.
+Althought the project wasn't successful that much, I learned many new things about state-of-art technologies of NLP. The models that I tried in this project are respectively GLOVE, BERT and FastText. The model achieved 71.5 % accuracy in the test data.
 
 For future work, feature engineering and extracting numerical features by using tf-idf might be helpful for the model. Also for the embedding part, just this weekend a huge arxiv dataset released. If one can sort the data and get the articles which related to 'chemistry' and 'material science' or more generally 'science' that can be also helpful for the model.
 
