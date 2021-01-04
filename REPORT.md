@@ -1,5 +1,5 @@
 # Update!
-Hi, Thanks for reading the report. Although the deadline has passed I wanted to try improving my model and implement new things. Therefore I wanted to create a release just before the deadline for the challenge. So if you would like to see that version of the repo, [here it is.](https://github.com/Hsgngr/dcipher-nlp-challenge/releases/tag/Deadline_version) 
+Hi, Thanks for reading the report. Although the deadline has passed I wanted to continue to try improving my model and implement new things. Therefore I wanted to create a release just before the deadline for the challenge. So if you would like to see that version of the repo, [here it is.](https://github.com/Hsgngr/dcipher-nlp-challenge/releases/tag/Deadline_version) 
 
 Otherwise this is the updated and latest version of the report.
 
@@ -146,7 +146,7 @@ Accuracy Score:  71.514 %
 There was almost 1.2 % improvement on the test data.
 
 # Conclusion
-Althought the project wasn't successful, I learned many new things about state-of-art technologies of NLP. The models that I tried in this project are respectively GLOVE, BERT and FastText. The model achieved 71.5 % accuracy in the test data.
+Althought the project wasn't successful that much, I learned many new things about state-of-art technologies of NLP. The models that I tried in this project are respectively GLOVE, BERT and FastText. The model achieved 71.5 % accuracy in the test data.
 
 For future work, feature engineering and extracting numerical features by using tf-idf might be helpful for the model. Also for the embedding part, just this weekend a huge arxiv dataset released. If one can sort the data and get the articles which related to 'chemistry' and 'material science' or more generally 'science' that can be also helpful for the model.
 
