@@ -121,9 +121,9 @@ Precision Plot             |  Recall Plot
 :-------------------------:|:-------------------------:
 ![Precision :](media/precision_plot.png)  |  ![Loss:](media/recall_plot.png)
 
-AUC Plot                   |  F-1 Score Plot
+AUC Plot                   |  F1 Score Plot
 :-------------------------:|:-------------------------:
-![AUC :](media/auc_plot.png)  |  ![F-1 Score:](media/recall_plot.png)
+![AUC :](media/auc_plot.png)  |  ![F1 Score:](media/f1_plot.png)
 
 It was prone to overfitting therefore I didnt run with more epochs.
 
