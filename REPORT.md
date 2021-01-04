@@ -111,7 +111,13 @@ Although this decrease the speed of training it helped to generalize the model b
 
 # Results and Discussion
 
-With a a relatively small dataset of GLOVE (smallest 6B) and with 2 LSTM layers the model is trained.
+After trying many different embedding, pre_trained models different preprocessings, and tuning hyperparameters creating our own embeddings with FastText and training with 2 Bidirectional LSTMs worked best. Here are the metrics:
+``` 
+Accuracy Score:  70.314 %
+     Precision:  70.574 %
+        Recall:  70.379 %
+      F1 score:  70.259 %
+``` 
 
 Accuracy Plot              |  Loss Plot
 :-------------------------:|:-------------------------:
@@ -125,11 +131,23 @@ AUC Plot                   |  F1 Score Plot
 :-------------------------:|:-------------------------:
 ![AUC :](media/auc_plot.png)  |  ![F1 Score:](media/f1_plot.png)
 
-It was prone to overfitting therefore I didnt run with more epochs.
+
+Having this much dropout in the layers created this noise between each epoch. But as we continue to train, it is obvious that the model was learning better and not overfitting.
+
+After training for 20 epoch, I trained the model with freezing every layer except the embeddings for 5 more epoch. Than I freeze the embeddings again and train 5 epochs more. This 10 epochs granted me with suprises.
+
+Bidirectional LSTM Model with Multiple Inputs :
+``` 
+Accuracy Score:  71.514 %
+     Precision:  71.608 %
+        Recall:  71.551 %
+      F1 score:  71.503 %
+``` 
+There was almost 1.2 % improvement on the test data.
 
 # Conclusion
-Althought the project wasn't successful, I learned many new things about NLP and state-of-art technologies of Embedding. The models that I tried in this project are GLOVE, BERT and FastText in this order.The model achieved 67% accuracy in the test data with only Titles.
+Althought the project wasn't successful, I learned many new things about state-of-art technologies of NLP. The models that I tried in this project are respectively GLOVE, BERT and FastText. The model achieved 71.5 % accuracy in the test data.
 
-As a future work, I will try to create my model with the FastText embeddings and boosting my vocabulary with Abstracts and external sources like wikipedia and academic articles. I believe FastText will increase the model's accuracy by using its ability to create word representations for even made-up words.
+For future work, feature engineering and extracting numerical features by using tf-idf might be helpful for the model. Also for the embedding part, just this weekend a huge arxiv dataset released. If one can sort the data and get the articles which related to 'chemistry' and 'material science' or more generally 'science' that can be also helpful for the model.
 
 
